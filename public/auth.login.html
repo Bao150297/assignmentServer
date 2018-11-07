@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body onload="inputAlert()"> 
+	<nav aria-label="breadcrumb">
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a href="#">Home</a></li>
+	    <li class="breadcrumb-item"><a href="#">Auth login</a></li>
+	    <li class="breadcrumb-item active" aria-current="page">Login</li>
+	  </ol>
+	</nav>
+	<form method="post" class="position-relative mx-auto w-25 p-3 mt-5">
+		<div class="form-group">
+			<label for="userID">Username</label>
+			<input type="text" class="form-control" id="userID" placeholder="Enter ID" name="name">
+		</div>
+		<div class="form-group">
+			<label for="userPW">Password</label>
+			<input type="password" class="form-control" id="userPW" placeholder="Password" name="password">
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+	<p id="demo"></p>
+	<script>
+		function inputAlert(){
+			var x = document.cookie;
+			if(x === 'error=403'){
+				alert('Người dùng không tồn tại!');
+			}else if(x === 'error=404'){
+				alert('Thông tin đăng nhập sai!');
+			}
+		};
+	</script>
+</body>
+</html>

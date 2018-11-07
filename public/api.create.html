@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create users</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+	<nav aria-label="breadcrumb">
+	  <ol class="breadcrumb">
+	    <li class="breadcrumb-item"><a href="#">Home</a></li>
+	    <li class="breadcrumb-item"><a href="#">API</a></li>
+	    <li class="breadcrumb-item active" aria-current="page">Create New</li>
+	  </ol>
+	</nav>
+	<form action="/api/create" method="post" class="position-relative mx-auto w-25 p-3 mt-5">
+		<div class="form-group">
+			<label for="stName">Name</label>
+			<input type="text" class="form-control" id="stName" placeholder="Enter ID" name="name">
+		</div>
+		<div class="form-group">
+			<label for="stGender">Gender</label>
+			<input type="text" class="form-control" id="stGender" placeholder="Gender" name="gender">
+		</div>
+		<div class="form-group">
+			<label for="stPhone">Password</label>
+			<input type="text" class="form-control" id="stPhone" placeholder="Phone number" name="phone">
+		</div>
+		<div class="form-group">
+			<label for="stEmail">Email</label>
+			<input type="email" class="form-control" id="stEmail" placeholder="example@email.com" name="email">
+		</div>
+		<div class="form-group">
+			<label for="stBirthday">Birthday</label>
+			<input type="text" class="form-control" id="stBirthday" placeholder="Birthday" name="birthday">
+		</div>
+		<div class="form-group">
+			<label for="stCity">City</label>
+			<input type="text" class="form-control" id="stCity" placeholder="City" name="city">
+		</div>
+		<div class="form-group">
+			<label for="stClass">Class</label>
+			<input type="text" class="form-control" id="stClass" placeholder="Class" name="class">
+		</div>
+		<div class="form-group">
+			<label for="stIdentify">Identify</label>
+			<input type="text" class="form-control" id="stIdentify" placeholder="Room No" name="identify">
+		</div>
+		<div class="form-group">
+			<label for="stRoom">Room No</label>
+			<input type="text" class="form-control" id="stRoom" placeholder="Room No" name="room">
+		</div>
+		<div class="form-group">
+			<label for="stTimes">Times</label>
+			<input type="text" class="form-control" id="stTimes" placeholder="Times" name="times">
+		</div>
+		<button type="submit" class="btn btn-primary">Sign up</button>
+	</form>
+</body>
+</html>
