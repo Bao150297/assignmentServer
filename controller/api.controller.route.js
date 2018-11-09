@@ -14,21 +14,20 @@ module.exports.index = async (req, res)=>{
 	var arrValue = result.slice(start, end);
 	var check = '';
 	for(let i of arrValue){
-		check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/";
+		i.birthday = i.birthday.replace("/", "-");
+		i.birthday = i.birthday.replace("/", "-");
+		i.city = i.city.replace("/", "-");
+		check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/" + i.email + "/" + i.birthday + "/" + i.city + "/" +			i.identify + "/" + i.room + "/" + i.times + "/";
 	}
 	var total = Math.ceil(result.length / 16);
 	check += total;
-	res.send('<p>' + check + '</p>'); 
+	res.send(check); 
 }
 
-module.exports.sendImage = (req, res)=>{
-	if(req.query.maSV){
-		res.sendFile(__basedir + '/public/f38597a4b05e355efb5c5bb21da0ac22');
-	}
-	else{
-		res.send('error');
-	}
-	res.sendFile(__basedir + '/public/96266e68f2cbb935c15a927115b3db55');
+module.exports.sendImage = async (req, res)=>{
+	var name = req.query.name;
+	var link = await Student.findOne({ name : name }).lean();
+	res.sendFile(__basedir + '/public/' + link.imageName);
 }
 
 module.exports.search = async (req, res, next)=>{
@@ -51,7 +50,11 @@ module.exports.search = async (req, res, next)=>{
 	}
 	var check = '';
 	for(let i of result){
-		check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/";
+		i.birthday = i.birthday.replace("/", "-");
+		i.birthday = i.birthday.replace("/", "-");
+		i.city = i.city.replace("/", "-");
+		check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/" + i.email + "/" + i.birthday + "/" + i.city + "/" +
+			i.identify + "/" + i.room + "/" + i.times + "/";
 	};
 	check += result.length;
 	res.send(check);

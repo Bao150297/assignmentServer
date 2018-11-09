@@ -13,7 +13,8 @@ var studentSchema =  new mongoose.Schema({
 	class: String,
 	indentify: String,
 	room: Number,
-	times: Number
+	times: Number,
+	imageName: String
 });
 
 var Student = mongoose.model('Student', studentSchema, 'students')
