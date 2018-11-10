@@ -65,6 +65,7 @@ module.exports.createIndex = (req, res)=>{
 }
 
 module.exports.createNew = (req, res)=>{
+	req.body.avatar = req.file.filename;
 	Student.insertMany({
 		name : req.body.name,
 		gender : req.body.gender,
@@ -75,7 +76,8 @@ module.exports.createNew = (req, res)=>{
 		class : req.body.class,
 		identify : req.body.identify,
 		room : req.body.room,
-		times : req.body.times
+		times : req.body.times,
+		imageName : req.body.avatar
 	}, function(err, result){
 			if(err){
 				res.send(err.toString());
@@ -86,4 +88,11 @@ module.exports.createNew = (req, res)=>{
 				/*res.send('<script>alert("Added successfully")</script>');*/
 			}
 		});
+};
+module.exports.checkIndex = (req, res)=>{
+	res.sendFile(__basedir + '/public/check.html');
+};
+
+module.exports.check = (req, res)=>{
+	res.status(200).send("OK");
 }
