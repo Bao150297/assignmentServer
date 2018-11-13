@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 
 var studentSchema =  new mongoose.Schema({
 	_id:{
@@ -11,12 +11,12 @@ var studentSchema =  new mongoose.Schema({
 	birthday: String,
 	city: String,
 	class: String,
-	indentify: String,
+	identify: String,
 	room: Number,
 	times: Number,
 	imageName: String
-});
+})
 
 var Student = mongoose.model('Student', studentSchema, 'students')
 
-module.exports = Student;
+module.exports = Student
