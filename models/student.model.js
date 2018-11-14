@@ -1,9 +1,9 @@
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Schema.Types.ObjectId;
+mongoose.set('useFindAndModify', false);
 
 var studentSchema =  new mongoose.Schema({
-	_id:{
-		type : String
-	},
+	_id: ObjectId,
 	name: String,
 	gender: String,
 	phone: String,

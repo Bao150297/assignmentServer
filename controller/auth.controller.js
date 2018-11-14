@@ -5,11 +5,6 @@ module.exports.index = (req, res)=>{
 	res.sendFile( __basedir +'/public/auth.login.html')
 }
 
-function getJedisQuery(name){
-   var query = Jedi.find({name:name})
-   return query
-}
-
 module.exports.login = async (req, res)=>{
 	var name = req.body.name
 	var password = req.body.password
@@ -32,6 +27,6 @@ module.exports.login = async (req, res)=>{
 		signed: true
 	})
 	//res.redirect('/users')
-	res.send('OK')
+	res.status(200)
 }
 

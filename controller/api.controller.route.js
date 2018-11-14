@@ -21,7 +21,7 @@ module.exports.index = async (req, res)=>{
 	}
 	var total = Math.ceil(result.length / 16)
 	check += total
-	res.send(check)
+	res.status(200).send(check)
 }
 
 module.exports.sendImage = async (req, res)=>{
@@ -30,38 +30,38 @@ module.exports.sendImage = async (req, res)=>{
 	res.sendFile(__basedir + '/public/' + link.imageName)
 }
 
-module.exports.search = async (req, res, next)=>{
-	var result
+module.exports.search = async (req, res)=>{
+	var result = []
 	if(req.query.name){
 		var name = req.query.name
+		console.log(name)
 		result = await Student.find({ name: name }).lean()
-		if(!result){ 
-			res.send('error');
-			next()
-		}
 	}
 	if(req.query.class){
 		var classNo = req.query.class
 		result = await Student.find({ class: classNo }).lean()
-		if(!result){ 
-			res.send('error')
-			next();
-		}
 	}
-	var check = ''
-	for(let i of result){
-		i.birthday = i.birthday.replace("/", "-")
-		i.birthday = i.birthday.replace("/", "-")
-		i.city = i.city.replace("/", "-")
-		check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/" + i.email + "/" + i.birthday + "/" + i.city + "/" +
-			i.identify + "/" + i.room + "/" + i.times + "/"
-	};
+	if(req.query.id){
+		var id = req.query.id
+		console.log(id)
+		var obj = await Student.findById(id).lean()
+		if(obj != null){ result[0] = obj }
+	}
+	console.log(result)
+	if(Array.isArray(result) && result.length){ 
+		var check = ''
+		for(let i of result){
+			i.birthday = i.birthday.replace("/", "-")
+			i.birthday = i.birthday.replace("/", "-")
+			i.city = i.city.replace("/", "-")
+			check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/" + i.email + "/" + i.birthday + "/" + i.city + "/" +
+				i.identify + "/" + i.room + "/" + i.times + "/"
+		}
 	check += result.length
-	res.send(check)
-}
-
-module.exports.createIndex = (req, res)=>{
-	res.sendFile(__basedir + '/public/api.create.html')
+	res.status(200).send(check)
+	}else{
+		res.status(404).send('Resource does not exits!');
+	}
 }
 
 module.exports.createNew = (req, res)=>{
@@ -80,19 +80,50 @@ module.exports.createNew = (req, res)=>{
 		imageName : req.body.avatar
 	}, function(err, result){
 			if(err){
-				res.send(err.toString())
+				res.status(404).end()
 				return;
 			}
 			else{
-				res.send('OK')
-				/*res.send('<script>alert("Added successfully")</script>');*/
+				res.status(200).send('Create new student successfully')
 			}
 		});
 };
-module.exports.checkIndex = (req, res)=>{
-	res.sendFile(__basedir + '/public/check.html')
-};
 
-module.exports.check = (req, res)=>{
-	res.status(200).send("OK")
+module.exports.execPut = (req, res)=>{
+	var id = req.params.id
+	console.log(req.body.name)
+	console.log(req.body.class)
+	Student.findByIdAndUpdate(id,  
+		{ name: req.body.name ,
+		 gender: req.body.gender,
+		 phone: req.body.phone ,
+		 email: req.body.email ,
+		 city: req.body.city ,
+		 identify: req.body.identify ,
+		 class: req.body.class ,
+		 room: req.body.room ,
+		 times: req.body.times ,
+		 birthday: req.body.birthday}
+		, 
+		{upsert: true}, 
+		err=>{
+			if(!err){
+				res.status(200).send('Update successfully!')
+			}else{
+				res.status(500).send('Update unsuccessfully!')
+			}
+		})
+}
+
+module.exports.execDel = async (req, res)=>{
+	var id = req.params.id
+	console.log(id)
+	Student.findByIdAndRemove({ _id: id}, err=>{
+		if(!err){
+			res.status(200).send('Delete scucessfully!')
+		}
+		else{
+			res.status(404).send('Resource does not exits!')
+		}
+	})
 }
