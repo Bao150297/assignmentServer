@@ -47,7 +47,6 @@ module.exports.search = async (req, res)=>{
 		var obj = await Student.findById(id).lean()
 		if(obj != null){ result[0] = obj }
 	}
-	console.log(result)
 	if(Array.isArray(result) && result.length){ 
 		var check = ''
 		for(let i of result){
@@ -91,8 +90,6 @@ module.exports.createNew = (req, res)=>{
 
 module.exports.execPut = (req, res)=>{
 	var id = req.params.id
-	console.log(req.body.name)
-	console.log(req.body.class)
 	Student.findByIdAndUpdate(id,  
 		{ name: req.body.name ,
 		 gender: req.body.gender,
@@ -117,7 +114,6 @@ module.exports.execPut = (req, res)=>{
 
 module.exports.execDel = async (req, res)=>{
 	var id = req.params.id
-	console.log(id)
 	Student.findByIdAndRemove({ _id: id}, err=>{
 		if(!err){
 			res.status(200).send('Delete scucessfully!')
