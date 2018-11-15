@@ -2,7 +2,7 @@ var express = require('express')
 var controller = require('../controller/api.controller.route.js')
 var router = express.Router()
 var multer =  require('multer')
-var upload = multer({ dest:'public/'})
+var upload = multer({ dest:'public/upload/'})
 
 router.get('/index', controller.index)
 router.get('/image', controller.sendImage)

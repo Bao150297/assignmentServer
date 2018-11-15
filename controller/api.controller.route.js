@@ -27,7 +27,11 @@ module.exports.index = async (req, res)=>{
 module.exports.sendImage = async (req, res)=>{
 	var name = req.query.name
 	var link = await Student.findOne({ name : name }).lean()
-	res.sendFile(__basedir + '/public/' + link.imageName)
+	if(link){
+		res.sendFile(__basedir + '/public/upload/' + link.imageName)
+	}else{
+		res.status(404).end()
+	}
 }
 
 module.exports.search = async (req, res)=>{
@@ -59,12 +63,13 @@ module.exports.search = async (req, res)=>{
 	check += result.length
 	res.status(200).send(check)
 	}else{
-		res.status(404).send('Resource does not exits!');
+		res.status(404).end();
 	}
 }
 
 module.exports.createNew = (req, res)=>{
 	req.body.avatar = req.file.filename
+	console.log(req.body)
 	Student.insertMany({
 		name : req.body.name,
 		gender : req.body.gender,
@@ -79,11 +84,11 @@ module.exports.createNew = (req, res)=>{
 		imageName : req.body.avatar
 	}, function(err, result){
 			if(err){
-				res.status(404).end()
+				res.status(500).end()
 				return;
 			}
 			else{
-				res.status(200).send('Create new student successfully')
+				res.status(200).end()
 			}
 		});
 };
@@ -105,21 +110,27 @@ module.exports.execPut = (req, res)=>{
 		{upsert: true}, 
 		err=>{
 			if(!err){
-				res.status(200).send('Update successfully!')
+				res.status(200).end()
 			}else{
-				res.status(500).send('Update unsuccessfully!')
+				res.status(500).end()
 			}
 		})
 }
 
 module.exports.execDel = async (req, res)=>{
 	var id = req.params.id
-	Student.findByIdAndRemove({ _id: id}, err=>{
-		if(!err){
-			res.status(200).send('Delete scucessfully!')
-		}
-		else{
-			res.status(404).send('Resource does not exits!')
-		}
-	})
+	var search = await Student.findById(id)
+	if(!search){
+		console.log(search)
+		res.status(404).end()
+	}else{
+		Student.findByIdAndRemove({ _id: id}, err=>{
+			if(!err){
+				res.status(200).end()
+			}
+			else{
+				res.status(500).end()
+			}
+		})
+	}
 }
