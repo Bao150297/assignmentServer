@@ -17,7 +17,7 @@ module.exports.index = async (req, res)=>{
 		i.birthday = i.birthday.replace("/", "-")
 		i.birthday = i.birthday.replace("/", "-")
 		i.city = i.city.replace("/", "-")
-		check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/" + i.email + "/" + i.birthday + "/" + i.city + "/" +			i.identify + "/" + i.room + "/" + i.times + "/"
+		check += `${i._id} / ${i.name} / ${i.gender} / ${i.class} / ${i.phone} / ${i.email} / ${i.birthday} / ${i.city} / ${i.identify} / ${i.room} / ${i.times}/`
 	}
 	var total = Math.ceil(result.length / 16)
 	check += total
@@ -26,6 +26,8 @@ module.exports.index = async (req, res)=>{
 
 module.exports.sendImage = async (req, res)=>{
 	var name = req.query.name
+	name = name.replace('+', ' ')
+	name = name.trim()
 	var link = await Student.findOne({ name : name }).lean()
 	if(link){
 		res.sendFile(__basedir + '/public/upload/' + link.imageName)
@@ -35,7 +37,7 @@ module.exports.sendImage = async (req, res)=>{
 }
 
 module.exports.search = async (req, res)=>{
-	var result = []
+	let result = []
 	if(req.query.name){
 		var name = req.query.name
 		console.log(name)
@@ -52,13 +54,12 @@ module.exports.search = async (req, res)=>{
 		if(obj != null){ result[0] = obj }
 	}
 	if(Array.isArray(result) && result.length){ 
-		var check = ''
+		let check = ''
 		for(let i of result){
 			i.birthday = i.birthday.replace("/", "-")
 			i.birthday = i.birthday.replace("/", "-")
 			i.city = i.city.replace("/", "-")
-			check += i._id + "/" + i.name + "/" + i.gender + "/" + i.class + "/" + i.phone + "/" + i.email + "/" + i.birthday + "/" + i.city + "/" +
-				i.identify + "/" + i.room + "/" + i.times + "/"
+			check += `${i._id}/${i.name}/${i.gender}/${i.class}/${i.phone}/${i.email}/${i.birthday}/${i.city}/${i.identify}/${i.room}/${i.times}/`
 		}
 	check += result.length
 	res.status(200).send(check)
@@ -95,6 +96,7 @@ module.exports.createNew = (req, res)=>{
 
 module.exports.execPut = (req, res)=>{
 	var id = req.params.id
+	id = id.replace('+', '')
 	Student.findByIdAndUpdate(id,  
 		{ name: req.body.name ,
 		 gender: req.body.gender,
@@ -119,6 +121,7 @@ module.exports.execPut = (req, res)=>{
 
 module.exports.execDel = async (req, res)=>{
 	var id = req.params.id
+	id = id.replace('+', '')
 	var search = await Student.findById(id)
 	if(!search){
 		console.log(search)

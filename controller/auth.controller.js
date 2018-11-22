@@ -12,21 +12,15 @@ module.exports.login = async (req, res)=>{
 	var user = await User.findOne({name : name}).lean()
 	console.log(req.body)
 	if(!user){
-		/*res.cookie('error', '403', {maxAge : 3000})
-		res.sendFile( __basedir +'/public/auth.login.html')
-	return*/
-		res.send('error')
+		res.status(403).end()
 	}
 	if(user.password !== hashedPassword){
-		/*res.cookie('error', '404', {maxAge : 5000})
-		res.sendFile( __basedir +'/public/auth.login.html')*/
-		res.send('error')
+		res.status(403).end()
 	return
 	}
 	res.cookie('userID', user._id, {
 		signed: true
 	})
-	//res.redirect('/users')
-	res.status(200)
+	res.status(200).send(user.name)
 }
 
