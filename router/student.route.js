@@ -12,5 +12,9 @@ router.post('/create',
 	controller.createNew)
 router.put('/put/:id', controller.execPut)
 router.delete('/delete/:id', controller.execDel)
+router.get('/announce', controller.sendAnnounce)
+router.get('/announce/:id', controller.sendContent)
+router.get('/room', controller.roomStatus)
+router.put('/room/register/:room', controller.roomRegister1, controller.roomRegister2, controller.roomRegister3)
 
 module.exports = router

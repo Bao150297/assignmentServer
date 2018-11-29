@@ -2,6 +2,7 @@ var express = require('express')
 var shortid = require('shortid')
 var md5 = require('md5')
 var User = require('../models/users.model.js')
+var Announce = require('../models/announce.model.js')
 
 module.exports.index = async (req, res)=>{
 	//res.sendFile(__basedir + '/public/home.users.html')
@@ -49,10 +50,42 @@ module.exports.create = (req, res)=>{
 			}
 		})
 } 
-/*
-module.exports.getID = (req, res)=>{
-	var id = req.params.id
 
-	var acc = db.get('user').find({id : id}).value()
-	res.send('<p>' + acc.id + '---' + acc.name + '</p>')
-}*/
+module.exports.changePW = (req, res)=>{
+	let id = req.params.id
+	let password = md5(req.body.newPW)
+	let result = User.findById(id).lean()
+	console.log(result)
+	User.findByIdAndUpdate(id,  
+		{ 
+			password: password }
+		, 
+		{upsert: true}, 
+		err=>{
+			if(!err){
+				res.status(200).end()
+			}else{
+				res.status(500).end()
+			}
+		})
+}
+
+module.exports.createAnnounce = (req, res)=>{
+	req.body.annnounce = req.file.filename
+	var title = decodeURIComponent(req.body.title)
+	title = title.replace(/([+])/g, ' ')
+	console.log(req.body)
+	Announce.insertMany({
+		title: title,
+		content: req.file.filename,
+		makerID: req.body.makerID
+	}, function(err, result){
+			if(err){
+				res.status(500).end()
+				return;
+			}
+			else{
+				res.status(200).end()
+			}
+	});
+}	

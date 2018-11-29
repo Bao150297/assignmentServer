@@ -1,5 +1,8 @@
 var express = require('express')
 var Student = require('../models/student.model.js')
+var Announce = require('../models/announce.model.js')
+var Room = require('../models/room.model.js')
+const fs = require('fs')
 
 module.exports.index = async (req, res)=>{
 	var page = parseInt(req.query.page)
@@ -127,8 +130,9 @@ module.exports.execDel = async (req, res)=>{
 		console.log(search)
 		res.status(404).end()
 	}else{
-		Student.findByIdAndRemove({ _id: id}, err=>{
+		Student.findByIdAndRemove({ _id: id}, async err=>{
 			if(!err){
+				await fs.unlink(__basedir + '/public/upload/' + search.imageName)
 				res.status(200).end()
 			}
 			else{
@@ -136,4 +140,89 @@ module.exports.execDel = async (req, res)=>{
 			}
 		})
 	}
+}
+
+module.exports.sendAnnounce = async (req, res)=>{
+	var result = await Announce.find().lean()
+	var num = result.length - 5
+	var arr = result.slice(num)
+	if(Array.isArray(result) && result.length){
+		let check = ''
+		for(let i of arr){
+			check += `${i._id} / ${i.title} /`
+		}
+		res.status(200).send(check)
+	}else{
+		res.status(404).end();
+	}
+}
+
+module.exports.sendContent = async (req, res)=>{
+	var id = req.params.id
+	var result = await Announce.findById(id).lean()
+	if(result){
+		res.status(200).sendFile(__basedir + '/public/announce/' + result.content)
+	}else{
+		res.status(404).end()
+	}
+}
+
+module.exports.roomStatus = async (req, res)=>{
+	var arr = await Room.find().lean()
+	var str = ''
+	for(let i of arr){
+		str += i.members
+	}
+	res.status(200).send(str)
+}
+
+module.exports.roomRegister1 = (req, res, next)=>{
+	var room = req.params.room
+	Room.findOneAndUpdate(
+		{ roomID: room },
+		{ $inc: { members: 1 } },
+		{ upsert: false }, 
+		err=>{
+			if(err){
+				console.log(err)
+				res.status(500).end()
+				return
+			}else{
+				next()
+			}
+		})
+}
+module.exports.roomRegister2 = async (req, res, next)=>{
+	var id = req.body.id
+	var obj = await Student.findById(id).lean()
+	Room.findOneAndUpdate(
+		{ roomID: obj.room },
+		{ $inc: { members: -1 }},
+		{ upsert: false }, 
+		err =>{
+			if(err){
+				console.log(err)
+				res.status(500).end()
+				return
+			}else{
+				next()
+			}
+		}
+	)
+}
+
+module.exports.roomRegister3 = (req, res)=>{
+	var room = req.params.room
+	var id = req.body.id
+	Student.findByIdAndUpdate(id,
+		{ $set: { room: room } },
+		{ upsert: false }, 
+		err=>{
+			if(err){
+				res.status(500).end()
+				return
+			}else{
+				res.status(200).end()
+			}
+		})
 }
