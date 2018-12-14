@@ -18,7 +18,7 @@ router.get('/create', controller.getCreate)
 router.post('/create', controller.create)
 
 router.get('/show', controller.getPage)
-//router.get('/:id', controller.getID)
+
 router.put('/changePassword/:id', controller.changePW)
 
 router.post('/createAnnounce', upload.single('announce'), controller.createAnnounce)
